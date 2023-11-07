@@ -1,8 +1,10 @@
 <f:layout name="Default" />
   
 <f:section name="Content">
+    <p><f:link.action action="updateExtensionList" class="btn btn-primary">Extension-Liste aktualisieren</f:link.action></p>
+    <br />
     <f:render partial="Common/Main" arguments="{overviewReport:overviewReport,sysDetail:sysDetail,targetSystemRequirement:targetSystemRequirement}"/>
-    
+
     <div class="ext-report-wrapper">
         <h2><f:translate key="extensionlist"/></h2>
         <f:comment>

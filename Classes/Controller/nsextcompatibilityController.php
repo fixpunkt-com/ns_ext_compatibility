@@ -31,7 +31,6 @@ namespace NITSAN\NsExtCompatibility\Controller;
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  *
  */
-use NITSAN\NsExtCompatibility\Utility\Extension;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\VersionNumberUtility;
 use TYPO3\CMS\Extbase\Annotation\Inject as inject;
@@ -62,6 +61,26 @@ class nsextcompatibilityController extends \TYPO3\CMS\Extbase\Mvc\Controller\Act
     protected $NsExtCompatibilityRepository;
 
     /**
+     * Update extension list
+     *
+     * @TODO: Adapt to multiple repositories if the Helper can handle this
+     * @throws \TYPO3\CMS\Extensionmanager\Exception\ExtensionManagerException
+     */
+    public function updateExtensionListAction()
+    {
+        /** @var \TYPO3\CMS\Extbase\Object\ObjectManager $objectManager */
+        $objectManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Extbase\Object\ObjectManager::class);
+
+        /** @var \TYPO3\CMS\Extensionmanager\Utility\Repository\Helper $repositoryHelper */
+        $repositoryHelper = $objectManager->get(\TYPO3\CMS\Extensionmanager\Utility\Repository\Helper::class);
+        $repositoryHelper->updateExtList();
+
+        /** @var \TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager $persistenceManager */
+        $persistenceManager = $objectManager->get(\TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager::class);
+        $persistenceManager->persistAll();
+    }
+
+    /**
      * This method is used for fetch list of local extension
      */
     public function listAction()
@@ -72,6 +91,10 @@ class nsextcompatibilityController extends \TYPO3\CMS\Extbase\Mvc\Controller\Act
         $targetVersion = $arguments['targetVersion'];
         if (isset($targetVersion)) {
             $sysDetail['targetVersion'] = $targetVersion;
+        }
+        $checkGitHub = $arguments['checkGitHub'];
+        if (isset($checkGitHub)) {
+            $sysDetail['checkGitHub'] = $checkGitHub;
         }
         //Get typo3 target version from argument and set new target version end
         $terRepo = $this->repositoryRepository->findOneTypo3OrgRepository();
@@ -119,7 +142,7 @@ class nsextcompatibilityController extends \TYPO3\CMS\Extbase\Mvc\Controller\Act
         $targetSystemRequirement = $this->getSysRequirementForTargetVersion($sysDetail['targetVersion']);
 
         //call getAllExtensions() method for fetch extension list
-        $assignArray = $this->getAllExtensions($sysDetail['targetVersion']);
+        $assignArray = $this->getAllExtensions($sysDetail['targetVersion'], $sysDetail['checkGitHub']);
 
         $assignArray['sysDetail'] = $sysDetail;
         $assignArray['targetSystemRequirement'] = $targetSystemRequirement;
@@ -171,6 +194,7 @@ class nsextcompatibilityController extends \TYPO3\CMS\Extbase\Mvc\Controller\Act
         $totalCompatible9 = 0;
         $totalCompatible10 = 0;
         $totalCompatible11 = 0;
+        $totalCompatible12 = 0;
         $totalInstalled = 0;
         $totalNonInstalled = 0;
         $arguments = $this->request->getArguments();
@@ -210,6 +234,9 @@ class nsextcompatibilityController extends \TYPO3\CMS\Extbase\Mvc\Controller\Act
                                 }
                                 if ($minVersion <= 12 && $maxVersion >= 11) {
                                     $nsExt['compatible11'] = 1;
+                                }
+                                if ($minVersion <= 13 && $maxVersion >= 12) {
+                                    $nsExt['compatible12'] = 1;
                                 }
                                 if ((($maxVersion > (int) $detailTargetVersion && $maxVersion <= (int) $detailTargetVersion + 1) || $minVersion > (int) $detailTargetVersion && $minVersion <= (int) $detailTargetVersion + 1) && ($newNsVersion < $extension->getVersion())) {
                                     $newNsVersion = $extension->getVersion();
@@ -255,6 +282,9 @@ class nsextcompatibilityController extends \TYPO3\CMS\Extbase\Mvc\Controller\Act
                 if ($nsExt['compatible11'] == 1) {
                     $totalCompatible11++;
                 }
+                if ($nsExt['compatible12'] == 1) {
+                    $totalCompatible12++;
+                }
                 if ($nsExt['installed'] == 1) {
                     $totalInstalled++;
                 } else {
@@ -277,7 +307,7 @@ class nsextcompatibilityController extends \TYPO3\CMS\Extbase\Mvc\Controller\Act
     /**
      * This method is used for  get detail list of local extension
      */
-    public function getAllExtensions($myTargetVersion)
+    public function getAllExtensions($myTargetVersion, $checkGitHub)
     {
         $i = 1;
         $totalCompatible4 = 0;
@@ -287,6 +317,7 @@ class nsextcompatibilityController extends \TYPO3\CMS\Extbase\Mvc\Controller\Act
         $totalCompatible9 = 0;
         $totalCompatible10 = 0;
         $totalCompatible11 = 0;
+        $totalCompatible12 = 0;
         $totalInstalled = 0;
         $totalNonInstalled = 0;
         $assignArray = [];
@@ -331,6 +362,9 @@ class nsextcompatibilityController extends \TYPO3\CMS\Extbase\Mvc\Controller\Act
                                 if ($minVersion <= 12 && $maxVersion >= 11) {
                                     $nsExt['compatible11'] = 1;
                                 }
+                                if ($minVersion <= 13 && $maxVersion >= 12) {
+                                    $nsExt['compatible12'] = 1;
+                                }
                                 if ((($maxVersion > (int) $myTargetVersion && $maxVersion <= (int) $myTargetVersion + 1) || $minVersion > (int) $myTargetVersion && $minVersion <= (int) $myTargetVersion + 1) && ($newNsVersion < $extension->getVersion())) {
                                     $newNsVersion = $extension->getVersion();
                                     $nsExt['newVersion'] = $newNsVersion;
@@ -371,12 +405,42 @@ class nsextcompatibilityController extends \TYPO3\CMS\Extbase\Mvc\Controller\Act
                 if ($nsExt['compatible11'] == 1) {
                     $totalCompatible11++;
                 }
+                if ($nsExt['compatible12'] == 1) {
+                    $totalCompatible12++;
+                }
                 if ($nsExt['installed'] == 1) {
                     $totalInstalled++;
                 } else {
                     $totalNonInstalled++;
                 }
                 //Count Total compatibility End
+                if (!$nsExt['customExt'] && $checkGitHub) {
+                    //$nsExt['all'] = $extension;
+                    $path = \TYPO3\CMS\Core\Core\Environment::getPublicPath() . '/typo3conf/ext/' . $nsExt['key'] . '/composer.json';
+                    if (file_exists($path) && is_file($path)) {
+                        // put the content of the file in a variable
+                        $data = file_get_contents($path);
+                        // JSON decode
+                        $obj = json_decode($data);
+                        // display the name of the first person
+                        $nsExt['composer'] = $obj->name;
+                        if ($obj->name) {
+                            $github = file_get_contents('https://raw.githubusercontent.com/' . $obj->name . '/master/ext_emconf.php');
+                            if ($github) {
+                                if(preg_match("/'version'\s*=>\s*'([0-9]{1,}[\.][0-9]{1,}[\.][0-9]{1,}-?[a-z]*)'/", $github,$matches)) {
+                                    $nsExt['github'] = 'v.' . $matches[1];
+                                } else {
+                                    $nsExt['github'] = '?';
+                                }
+                                if(preg_match("/'typo3'\s*=>\s*'([0-9]{1,}[\.][0-9]{1,}[\.][0-9]{1,}-[0-9]{1,}[\.][0-9]{1,}[\.][0-9]{1,})'/", $github,$matches)) {
+                                    $nsExt['github'] .= "<br/>\n" . $matches[1];
+                                } else {
+                                    $nsExt['github'] .= "<br/>?";
+                                }
+                            }
+                        }
+                    }
+                }
 
                 // Set overview Report end
                 $extensionlist[$i] = $nsExt;
@@ -393,6 +457,7 @@ class nsextcompatibilityController extends \TYPO3\CMS\Extbase\Mvc\Controller\Act
         $overviewReport['totalCompatible9'] = $totalCompatible9;
         $overviewReport['totalCompatible10'] = $totalCompatible10;
         $overviewReport['totalCompatible11'] = $totalCompatible11;
+        $overviewReport['totalCompatible12'] = $totalCompatible12;
         //Set overview array end
 
         $assignArray['overviewReport'] = $overviewReport;
@@ -516,6 +581,16 @@ class nsextcompatibilityController extends \TYPO3\CMS\Extbase\Mvc\Controller\Act
                 ],
                 'mysql' => [
                     'required' => '5.7',
+                    'current' => $mysqlVersion[0],
+                ],
+            ],
+            '12.x' => [
+                'php' => [
+                    'required' => '8.1',
+                    'current' => substr(phpversion(), 0, 6),
+                ],
+                'mysql' => [
+                    'required' => '8.0',
                     'current' => $mysqlVersion[0],
                 ],
             ],

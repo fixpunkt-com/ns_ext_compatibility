@@ -20,7 +20,7 @@
 			<label index="option.label6">TYPO3 6.x</label>
 			<label index="option.label7">TYPO3 7.x</label>
 			<label index="option.label8">TYPO3 8.x</label>
-			<label index="option.label9">TYPO3 9.x</label>
+			<label index="option.label9">TYPO3 9.xyz</label>
 			<label index="typo3UpgradeOptLabel">Choose target TYPO3 version to check compatibility : </label>
 			<label index="warning.selectProperTargetVersionHeadline">Please select proper target TYPO3 version.</label>
 			<label index="btn.export">Export Report</label>
