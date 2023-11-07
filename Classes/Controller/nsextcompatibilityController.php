@@ -31,6 +31,7 @@ namespace NITSAN\NsExtCompatibility\Controller;
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  *
  */
+use NITSAN\NsExtCompatibility\Utility\Extension;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\VersionNumberUtility;
 use TYPO3\CMS\Extbase\Annotation\Inject as inject;
@@ -44,21 +45,33 @@ class nsextcompatibilityController extends \TYPO3\CMS\Extbase\Mvc\Controller\Act
 {
     /**
      * @var \TYPO3\CMS\Extensionmanager\Domain\Repository\ExtensionRepository
-     * @inject
      */
     protected $extensionRepository;
 
     /**
-     * @var \TYPO3\CMS\Extensionmanager\Domain\Repository\RepositoryRepository
-     * @inject
-     */
-    protected $repositoryRepository;
-
-    /**
      * @var \NITSAN\NsExtCompatibility\Domain\Repository\NsExtCompatibilityRepository
-     * @inject
      */
     protected $NsExtCompatibilityRepository;
+
+    /**
+     * Injects the extension-Repository
+     *
+     * @param \TYPO3\CMS\Extensionmanager\Domain\Repository\ExtensionRepository $extensionRepository
+     */
+    public function injectExtensionRepository(\TYPO3\CMS\Extensionmanager\Domain\Repository\ExtensionRepository $extensionRepository)
+    {
+        $this->extensionRepository = $extensionRepository;
+    }
+
+    /**
+     * Injects the $repositoryRepository-Repository
+     *
+     * @param \NITSAN\NsExtCompatibility\Domain\Repository\NsExtCompatibilityRepository $NsExtCompatibilityRepository
+     */
+    public function injectNsExtCompatibilityRepository(\NITSAN\NsExtCompatibility\Domain\Repository\NsExtCompatibilityRepository $NsExtCompatibilityRepository)
+    {
+        $this->NsExtCompatibilityRepository = $NsExtCompatibilityRepository;
+    }
 
     /**
      * Update extension list
@@ -97,7 +110,7 @@ class nsextcompatibilityController extends \TYPO3\CMS\Extbase\Mvc\Controller\Act
             $sysDetail['checkGitHub'] = $checkGitHub;
         }
         //Get typo3 target version from argument and set new target version end
-        $terRepo = $this->repositoryRepository->findOneTypo3OrgRepository();
+        $terRepo = null;
         //Check last updated Date and give  show warning start
         if ($terRepo != null) {
             $lastUpdatedTime = $terRepo->getLastUpdate();
@@ -414,6 +427,7 @@ class nsextcompatibilityController extends \TYPO3\CMS\Extbase\Mvc\Controller\Act
                     $totalNonInstalled++;
                 }
                 //Count Total compatibility End
+				
                 if (!$nsExt['customExt'] && $checkGitHub) {
                     //$nsExt['all'] = $extension;
                     $path = \TYPO3\CMS\Core\Core\Environment::getPublicPath() . '/typo3conf/ext/' . $nsExt['key'] . '/composer.json';
@@ -437,9 +451,17 @@ class nsextcompatibilityController extends \TYPO3\CMS\Extbase\Mvc\Controller\Act
                                 } else {
                                     $nsExt['github'] .= "<br/>?";
                                 }
+                            } else {
+                                $nsExt['github'] = 'Keine Treffer';
                             }
+                        } else {
+                            $nsExt['github'] = 'name fehlt in composer.json';
                         }
+                    } else {
+                        $nsExt['github'] = 'composer.json fehlt';
                     }
+                } else {
+                    $nsExt['github'] = '-';
                 }
 
                 // Set overview Report end

@@ -3,40 +3,18 @@ if (!defined('TYPO3_MODE')) {
     die('Access denied.');
 }
 $_EXTKEY = 'ns_ext_compatibility';
-if (version_compare(TYPO3_branch, '6.0', '<')) {
-    if (TYPO3_MODE === 'BE') {
-        /**
-         * Registers a Backend Module
-         */
-        Tx_Extbase_Utility_Extension::registerModule(
-            $_EXTKEY,
-            'tools',	 // Make module a submodule of 'tools'
-            'nsextcompatibility',	// Submodule key
-            '',						// Position
-            [
-                'nsextcompatibility4' => 'list, viewAllVersion, detail, updateExtensionList',
 
-            ],
-            [
-                'access' => 'user,group',
-                'icon'   => 'EXT:' . $_EXTKEY . '/Resources/Public/Icons/ns_ext_compatibility.svg',
-                'labels' => 'LLL:EXT:' . $_EXTKEY . '/Resources/Private/Language/locallang.xml:module.title',
-            ]
-        );
-    }
-    t3lib_extMgm::addStaticFile($_EXTKEY, 'Configuration/TypoScript/nsextcompatibility4', 'ns_ext_compatibility');
-} else {
     if (TYPO3_MODE === 'BE') {
         /**
          * Registers a Backend Module
          */
         \TYPO3\CMS\Extbase\Utility\ExtensionUtility::registerModule(
-            'NITSAN.' . $_EXTKEY,
+            'NsExtCompatibility',
             'tools',	 // Make module a submodule of 'tools'
             'nsextcompatibility',	// Submodule key
             '',						// Position
             [
-                'nsextcompatibility' => 'list,viewAllVersion,detail,updateExtensionList'
+                \NITSAN\NsExtCompatibility\Controller\nsextcompatibilityController::class => 'list,viewAllVersion,detail,updateExtensionList'
             ],
             [
                 'access' => 'user,group',
@@ -59,4 +37,3 @@ if (version_compare(TYPO3_branch, '6.0', '<')) {
     } else {
         \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addStaticFile($_EXTKEY, 'Configuration/TypoScript', 'ns_ext_compatibility');
     }
-}

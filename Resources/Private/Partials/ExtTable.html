@@ -50,13 +50,13 @@
 	    <f:for each="{extensionlist}" as="extension" iteration="iter">
 	        <f:if condition="{extension.key} != 'ns_ext_compatibility'">
 	            <tr>
-	                <td><img src="{extension.icon}" width="24" />
-                        {iter.cycle}</td>
+	                <td>{iter.cycle}</td>
 	                <td class="ext-overview" data-toggle="modal" data-target="#nsModel" title="{f:translate(key: 'viewDetailTooltip',arguments: {extension: extension.key})}" data-uri="{f:uri.action(action: 'detail', arguments: {extKey: extension.key,targetVersion:sysDetail.targetVersion}, controller: 'nsextcompatibility')}">
 	                    <f:format.crop maxCharacters="25" append="...">{extension.title}</f:format.crop>
 	                </td>
 	                <td class="ext-overview" data-toggle="modal" data-target="#nsModel" title="{f:translate(key: 'viewDetailTooltip',arguments: {extension: extension.key})}" data-uri="{f:uri.action(action: 'detail', arguments: {extKey: extension.key,targetVersion:sysDetail.targetVersion}, controller: 'nsextcompatibility')}">
-	                  {extension.key}<br/>{extension.composer}
+	                    {extension.key}<br>
+                        {extension.composer}
 	                </td>
 
 		            <f:if condition="{sysDetail.typo3version}<7">
@@ -67,13 +67,13 @@
                                         <f:then>
                                             <td class="compatible text-center">
                                                 <span class="hide-label"><f:translate key="yes"/></span>
-                                                <img src="../typo3conf/ext/ns_ext_compatibility/Resources/Public/Backend/Icons/righ-icon.png" width="12" height="12" />
+                                                <img src="/typo3conf/ext/ns_ext_compatibility/Resources/Public/Backend/Icons/righ-icon.png" width="12" height="12" />
                                             </td>
                                         </f:then>
                                         <f:else>
                                             <td class="incompatible text-center">
                                                 <span class="hide-label"><f:translate key="no"/></span>
-                                                <img src="../typo3conf/ext/ns_ext_compatibility/Resources/Public/Backend/Icons/crose-icon.png" width="12" height="12" />
+                                                <img src="/typo3conf/ext/ns_ext_compatibility/Resources/Public/Backend/Icons/crose-icon.png" width="12" height="12" />
                                             </td>
                                         </f:else>
                                     </f:if>
@@ -92,13 +92,13 @@
                                         <f:then>
                                             <td class="compatible text-center">
                                                 <span class="hide-label"><f:translate key="yes"/></span>
-                                                <img src="../typo3conf/ext/ns_ext_compatibility/Resources/Public/Backend/Icons/righ-icon.png" width="12" height="12" />
+                                                <img src="/typo3conf/ext/ns_ext_compatibility/Resources/Public/Backend/Icons/righ-icon.png" width="12" height="12" />
                                             </td>
                                         </f:then>
                                         <f:else>
                                             <td class="incompatible text-center">
                                                 <span class="hide-label"><f:translate key="no"/></span>
-                                                <img src="../typo3conf/ext/ns_ext_compatibility/Resources/Public/Backend/Icons/crose-icon.png" width="12" height="12" />
+                                                <img src="/typo3conf/ext/ns_ext_compatibility/Resources/Public/Backend/Icons/crose-icon.png" width="12" height="12" />
                                             </td>
                                         </f:else>
                                     </f:if>
@@ -117,13 +117,13 @@
                                         <f:then>
                                             <td class="compatible text-center">
                                                 <span class="hide-label"><f:translate key="yes"/></span>
-                                                <img src="../typo3conf/ext/ns_ext_compatibility/Resources/Public/Backend/Icons/righ-icon.png" width="12" height="12" />
+                                                <img src="/typo3conf/ext/ns_ext_compatibility/Resources/Public/Backend/Icons/righ-icon.png" width="12" height="12" />
                                             </td>
                                         </f:then>
                                         <f:else>
                                             <td class="incompatible text-center">
                                                 <span class="hide-label"><f:translate key="no"/></span>
-                                                <img src="../typo3conf/ext/ns_ext_compatibility/Resources/Public/Backend/Icons/crose-icon.png" width="12" height="12" />
+                                                <img src="/typo3conf/ext/ns_ext_compatibility/Resources/Public/Backend/Icons/crose-icon.png" width="12" height="12" />
                                             </td>
                                         </f:else>
                                     </f:if>
@@ -142,13 +142,13 @@
                                         <f:then>
                                             <td class="compatible text-center">
                                                 <span class="hide-label"><f:translate key="yes"/></span>
-                                                <img src="../typo3conf/ext/ns_ext_compatibility/Resources/Public/Backend/Icons/righ-icon.png" width="12" height="12" />
+                                                <img src="/typo3conf/ext/ns_ext_compatibility/Resources/Public/Backend/Icons/righ-icon.png" width="12" height="12" />
                                             </td>
                                         </f:then>
                                         <f:else>
                                             <td class="incompatible text-center">
                                                 <span class="hide-label"><f:translate key="no"/></span>
-                                                <img src="../typo3conf/ext/ns_ext_compatibility/Resources/Public/Backend/Icons/crose-icon.png" width="12" height="12" />
+                                                <img src="/typo3conf/ext/ns_ext_compatibility/Resources/Public/Backend/Icons/crose-icon.png" width="12" height="12" />
                                             </td>
                                         </f:else>
                                     </f:if>
@@ -167,13 +167,13 @@
                                         <f:then>
                                             <td class="compatible text-center">
                                                 <span class="hide-label"><f:translate key="yes"/></span>
-                                                <img src="../typo3conf/ext/ns_ext_compatibility/Resources/Public/Backend/Icons/righ-icon.png" width="12" height="12" />
+                                                <img src="/typo3conf/ext/ns_ext_compatibility/Resources/Public/Backend/Icons/righ-icon.png" width="12" height="12" />
                                             </td>
                                         </f:then>
                                         <f:else>
                                             <td class="incompatible text-center">
                                                 <span class="hide-label"><f:translate key="no"/></span>
-                                                <img src="../typo3conf/ext/ns_ext_compatibility/Resources/Public/Backend/Icons/crose-icon.png" width="12" height="12" />
+                                                <img src="/typo3conf/ext/ns_ext_compatibility/Resources/Public/Backend/Icons/crose-icon.png" width="12" height="12" />
                                             </td>
                                         </f:else>
                                     </f:if>
@@ -192,13 +192,13 @@
                                         <f:then>
                                             <td class="compatible text-center">
                                                 <span class="hide-label"><f:translate key="yes"/></span>
-                                                <img src="../typo3conf/ext/ns_ext_compatibility/Resources/Public/Backend/Icons/righ-icon.png" width="12" height="12" />
+                                                <img src="/typo3conf/ext/ns_ext_compatibility/Resources/Public/Backend/Icons/righ-icon.png" width="12" height="12" />
                                             </td>
                                         </f:then>
                                         <f:else>
                                             <td class="incompatible text-center">
                                                 <span class="hide-label"><f:translate key="no"/></span>
-                                                <img src="../typo3conf/ext/ns_ext_compatibility/Resources/Public/Backend/Icons/crose-icon.png" width="12" height="12" />
+                                                <img src="/typo3conf/ext/ns_ext_compatibility/Resources/Public/Backend/Icons/crose-icon.png" width="12" height="12" />
                                             </td>
                                         </f:else>
                                     </f:if>
@@ -217,13 +217,13 @@
                                         <f:then>
                                             <td class="compatible text-center">
                                                 <span class="hide-label"><f:translate key="yes"/></span>
-                                                <img src="../typo3conf/ext/ns_ext_compatibility/Resources/Public/Backend/Icons/righ-icon.png" width="12" height="12" />
+                                                <img src="/typo3conf/ext/ns_ext_compatibility/Resources/Public/Backend/Icons/righ-icon.png" width="12" height="12" />
                                             </td>
                                         </f:then>
                                         <f:else>
                                             <td class="incompatible text-center">
                                                 <span class="hide-label"><f:translate key="no"/></span>
-                                                <img src="../typo3conf/ext/ns_ext_compatibility/Resources/Public/Backend/Icons/crose-icon.png" width="12" height="12" />
+                                                <img src="/typo3conf/ext/ns_ext_compatibility/Resources/Public/Backend/Icons/crose-icon.png" width="12" height="12" />
                                             </td>
                                         </f:else>
                                     </f:if>
