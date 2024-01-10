@@ -8,20 +8,37 @@ $_EXTKEY = 'ns_ext_compatibility';
         /**
          * Registers a Backend Module
          */
-        \TYPO3\CMS\Extbase\Utility\ExtensionUtility::registerModule(
-            'NsExtCompatibility',
-            'tools',	 // Make module a submodule of 'tools'
-            'nsextcompatibility',	// Submodule key
-            '',						// Position
-            [
-                \NITSAN\NsExtCompatibility\Controller\nsextcompatibilityController::class => 'list,viewAllVersion,detail,updateExtensionList'
-            ],
-            [
-                'access' => 'user,group',
-                'icon'   => 'EXT:' . $_EXTKEY . '/Resources/Public/Icons/ns_ext_compatibility.svg',
-                'labels' => 'LLL:EXT:' . $_EXTKEY . '/Resources/Private/Language/locallang.xlf:module.title',
-            ]
-        );
+        if (version_compare(TYPO3_branch, '11.0', '<')) {
+            \TYPO3\CMS\Extbase\Utility\ExtensionUtility::registerModule(
+                'NITSAN.' . $_EXTKEY,
+                'tools',	 // Make module a submodule of 'tools'
+                'nsextcompatibility',	// Submodule key
+                '',						// Position
+                [
+                    'nsextcompatibility' => 'list,viewAllVersion,detail,updateExtensionList'
+                ],
+                [
+                    'access' => 'user,group',
+                    'icon'   => 'EXT:' . $_EXTKEY . '/Resources/Public/Icons/ns_ext_compatibility.svg',
+                    'labels' => 'LLL:EXT:' . $_EXTKEY . '/Resources/Private/Language/locallang.xlf:module.title',
+                ]
+            );
+        } else {
+            \TYPO3\CMS\Extbase\Utility\ExtensionUtility::registerModule(
+                'NsExtCompatibility',
+                'tools',	 // Make module a submodule of 'tools'
+                'nsextcompatibility',	// Submodule key
+                '',						// Position
+                [
+                    \NITSAN\NsExtCompatibility\Controller\nsextcompatibilityController::class => 'list,viewAllVersion,detail,updateExtensionList'
+                ],
+                [
+                    'access' => 'user,group',
+                    'icon'   => 'EXT:' . $_EXTKEY . '/Resources/Public/Icons/ns_ext_compatibility.svg',
+                    'labels' => 'LLL:EXT:' . $_EXTKEY . '/Resources/Private/Language/locallang.xlf:module.title',
+                ]
+            );
+        }
 
         $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scheduler']['tasks']['NITSAN\\NsExtCompatibility\\Task\\SendExtensionsReportTask'] =[
         'extension' => $_EXTKEY,
